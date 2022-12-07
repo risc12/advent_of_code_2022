@@ -91,9 +91,7 @@ class Terminal {
   }
 }
 
-function partOne(fileContent) {
-  const input = readFileContent(fileContent);
-
+function exploreSystemViaTerminalCommands(input) {
   const terminal = new Terminal();
 
   for(let i = 0; i < input.length; i++) {
@@ -109,7 +107,13 @@ function partOne(fileContent) {
     }
   }
 
-  // console.dir(terminal.root, { depth: null })
+  return terminal;
+}
+
+function partOne(fileContent) {
+  const input = readFileContent(fileContent);
+
+  const terminal = exploreSystemViaTerminalCommands(input);
 
   const TRESHOLD = 100_000;
 
@@ -129,19 +133,51 @@ function partOne(fileContent) {
 
   collectDirsBelowThousand(terminal.root);
 
-  // console.log(dirsBelowTreshold);
-
   return dirsBelowTreshold.reduce((acc, el) => acc + el.size, 0);
 }
 
 function partTwo(fileContent) {
   const input = readFileContent(fileContent);
 
-  return 0;
+  const terminal = exploreSystemViaTerminalCommands(input);
+
+  const diskSize    = 70000000;
+  const neededSpace = 30000000;
+  const usedSpace   = terminal.root.size;
+
+  const spaceLeft = diskSize - usedSpace;
+  const spaceToFree = neededSpace - spaceLeft;
+
+  console.table({
+    diskSize,
+    neededSpace,
+    usedSpace,
+    spaceLeft,
+    spaceToFree
+  });
+
+  const normalizedDirectories = [];
+
+  function normalizeTree(directory) {
+    directory.children.forEach(child => {
+      if(child instanceof Directory) {
+        if(child.size > spaceToFree) {
+          normalizedDirectories.push(child);
+          normalizeTree(child);
+        }
+      }
+    })
+  }
+
+  normalizeTree(terminal.root);
+
+  const sorted = normalizedDirectories.sort((dirA, dirB) => dirA.size - dirB.size);
+
+  return sorted[0].size;
 }
 
 
 test([
   [partOne, 95437, 1444896],
-  // [partTwo],
+  [partTwo, 24933642, 404395],
 ], { skipRealCases: false });
