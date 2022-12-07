@@ -64,7 +64,7 @@ class Terminal {
   }
 
   cd(directory) {
-    console.log(`${this.directoryString} $ cd ${directory}`)
+    // console.log(`${this.directoryString} $ cd ${directory}`)
 
     if (directory === '/') return;
 
@@ -76,7 +76,7 @@ class Terminal {
   }
 
   ls() {
-    console.log(`${this.directoryString} $ ls`)
+    // console.log(`${this.directoryString} $ ls`)
   }
 
   appendOutput(output) {
@@ -85,7 +85,7 @@ class Terminal {
     const isDir = sizeOrDir === 'dir';
     const size = !isDir && sizeOrDir;
 
-    console.log(isDir ? '📂 ' : '📄 ' , name, size || '');
+    // console.log(isDir ? '📂 ' : '📄 ' , name, size || '');
 
     this.cursor.addChild(isDir ? 'directory' : 'file', name, size);
   }
@@ -109,8 +109,7 @@ function partOne(fileContent) {
     }
   }
 
-  console.log(terminal.root.size);
-  console.dir(terminal.root, { depth: null })
+  // console.dir(terminal.root, { depth: null })
 
   const TRESHOLD = 100_000;
 
@@ -130,7 +129,7 @@ function partOne(fileContent) {
 
   collectDirsBelowThousand(terminal.root);
 
-  console.log(dirsBelowTreshold);
+  // console.log(dirsBelowTreshold);
 
   return dirsBelowTreshold.reduce((acc, el) => acc + el.size, 0);
 }
@@ -143,6 +142,6 @@ function partTwo(fileContent) {
 
 
 test([
-  [partOne, 95437],
+  [partOne, 95437, 1444896],
   // [partTwo],
 ], { skipRealCases: false });
